@@ -4,11 +4,17 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/bash-colors.sh"
 
 AMBARI=/osx/src/apache/ambari
+AMBARI_VERSION_MARKER=~/ambari-version
 HDP_MPACK=/osx/src/hwx/hdp_ambari_definitions
 HOSTNAME=`hostname`
 
 centOSVersion=`cat /etc/redhat-release | grep -o '[0-9]\.[0-9]'`
 pythonVersion=`python -c 'import platform; print(platform.python_version())'`
+
+AMBARI_VERSION=""
+if [ -f $AMBARI_VERSION_MARKER ]; then
+    AMBARI_VERSION=`cat $AMBARI_VERSION_MARKER`
+fi
 
 case $pythonVersion in
     2.6*) pythonDirectory="python2.6";;
@@ -74,7 +80,12 @@ function update_ambari_server_resources {
 
   # ambari-server python resource copy (for both older and newer versions of ambari)
   copy_from_osx $AMBARI/ambari-server/src/main/resources /var/lib/ambari-server/resources
-  copy_from_osx $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
+
+  # only copy HDP Mpack if the ambari version is low enough
+  if [[ $AMBARI_VERSION == 2* ]] ; then
+    copy_from_osx $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
+  fi
+
   copy_from_osx $AMBARI/ambari-server/src/main/python/ambari_server /usr/lib/$pythonDirectory/site-packages/ambari_server
   copy_from_osx $AMBARI/ambari-server/src/main/python/ambari_server /usr/lib/ambari-server/lib/ambari_server
 
