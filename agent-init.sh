@@ -63,12 +63,17 @@ echo "[2] Ambari 2.6.0.0"
 echo "[3] Ambari 2.6.2.0 (CentOS 6/7)"
 echo "[4] Ambari 2.7.0.0 (CentOS 7)"
 echo "[5] Ambari 3.0.0.0 (CentOS 7)"
-read -p 'Option: ' selection
+printf "Option (5): "
+
+read -r AMBARI_INSTALL_CHOICE
+if [[ -z "${AMBARI_INSTALL_CHOICE// }" ]]; then
+  AMBARI_INSTALL_CHOICE="5"
+fi
 
 # agent install
 cd /etc/yum.repos.d/
 
-case "$selection" in
+case "$AMBARI_INSTALL_CHOICE" in
   1)
   wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-2.5.2.0/ambari.repo"
   echo "2.5.2.0" >> $AMBARI_VERSION_MARKER
@@ -86,11 +91,11 @@ case "$selection" in
   echo "2.7.0.0" >> $AMBARI_VERSION_MARKER
   ;;
   5)
-  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-3.0.0.0-1499/ambari.repo"
+  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-3.0.0.0-1645/ambari.repo"
   echo "3.0.0.0" >> $AMBARI_VERSION_MARKER
   ;;
   *)
-    echo "$selection is not a valid option"
+    echo "$AMBARI_INSTALL_CHOICE is not a valid option"
     exit 1
 esac
 

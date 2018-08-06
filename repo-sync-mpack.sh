@@ -16,18 +16,18 @@ if [[ -z "${MPACK_VERSION// }" ]]; then
   MPACK_VERSION="1.0.0"
 fi
 
+read -p "Build Number: " BUILD
+if [[ -z "${BUILD// }" ]]; then
+  echo "${RED}A build number is required!${NC}"
+  exit 1
+fi
+
 read -p "Mpack Repo URL Version [1.x]: " MPACK_REPO_URL_VERSION
 if [[ -z "${MPACK_REPO_URL_VERSION// }" ]]; then
   MPACK_REPO_URL_VERSION="1.x"
 fi
 
 MPACK_NAME_LOWERCASE="${MPACK_NAME,,}"
-
-read -p "Build Number: " BUILD
-if [[ -z "${BUILD// }" ]]; then
-  echo "${RED}A build number is required!${NC}"
-  exit 1
-fi
 
 # define variables to use
 MPACK_REPO_FILE="/etc/yum.repos.d/$MPACK_NAME_LOWERCASE.repo"

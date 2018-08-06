@@ -27,16 +27,14 @@ cp -R $AMBARI_GIT/ambari-server/src/main/resources/db $KEYSTORE_ROOT
 cp $AMBARI_GIT/ambari-server/conf/unix/ca.config $KEYSTORE_ROOT
 sed -i s,/var/lib/ambari-server/keys/db,/Users/$USERNAME/dev/ambari/keystore/db,g $KEYSTORE_ROOT/ca.config
 
-echo "${CYAN}-*- Cleaning up Mpacks...${NC}"
-rm -rf /private/ambari-server/resources/mpacks-v2
-mkdir /private/ambari-server/resources/mpacks-v2
-rm -rf /private/ambari-server/resources/stacks/HDPCORE
+# invoke a function to clear mpack stuff
+clearMpackV2Artifacts
 
 echo
-printf "${YELLOW}Do you want to link the HDP Stack from Gerrit to Ambari Server? [Y/N] (Y):${NC} "
+printf "${YELLOW}Do you want to link the HDP Stack from Gerrit to Ambari Server (Ambari 2.7)? [Y/N] (N):${NC} "
 read -r LINK_HDP_STACK
 if [[ -z "${LINK_HDP_STACK// }" ]]; then
-  LINK_HDP_STACK="Y"
+  LINK_HDP_STACK="N"
 fi
 
 rm -f /private/ambari-server/resources/stacks/HDP/3.0

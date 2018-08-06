@@ -24,15 +24,15 @@ fi
 
 STACK_NAME_LOWERCASE="${STACK_NAME,,}"
 
-read -p "Mpack Repo URL Version [3.x]: " REPO_URL_VERSION
-if [[ -z "${REPO_URL_VERSION// }" ]]; then
-  REPO_URL_VERSION="3.x"
-fi
-
 read -p "Build Number: " BUILD
 if [[ -z "${BUILD// }" ]]; then
   echo "${RED}A build number is required!${NC}"
   exit 1
+fi
+
+read -p "Repo URL Version [3.x]: " REPO_URL_VERSION
+if [[ -z "${REPO_URL_VERSION// }" ]]; then
+  REPO_URL_VERSION="3.x"
 fi
 
 read -p "Supports GPL Repo [Y]: " SUPPORTS_GPL
@@ -66,7 +66,7 @@ if $SUPPORTS_GPL ; then
 echo "
 [$STACK_NAME-GPL-$STACK_VERSION-$BUILD]
 name=$STACK_NAME-GPL $STACK_VERSION-$BUILD
-baseurl=http://s3.amazonaws.com/dev.hortonworks.com/$STACK_NAME-GPL/$OS/3.x/BUILDS/$STACK_VERSION-$BUILD
+baseurl=http://s3.amazonaws.com/dev.hortonworks.com/$STACK_NAME-GPL/$OS/$REPO_URL_VERSION/BUILDS/$STACK_VERSION-$BUILD
 gpgcheck=0
 enabled=1
 " >> $REPO_FILE

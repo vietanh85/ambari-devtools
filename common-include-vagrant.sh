@@ -126,7 +126,7 @@ function update_agent {
  printf "      ├──${GREEN} Copying %s to %s${NC}\n" $SOURCE $TARGET
  mkdir -p $TARGET
 
- rsync -rt --safe-links --exclude '*.pyc' $SOURCE/ $TARGET
+ rsync -rt --links --exclude '*.pyc' $SOURCE/ $TARGET
 
  find $TARGET -name "*.py?" -delete
 }

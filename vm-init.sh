@@ -1,8 +1,7 @@
-# figure out which file to edit for profile additions
-profileFile=.profile
-if [ -f "$HOME/.bash_profile" ]; then
-  profileFile=.bash_profile
-fi
+#!/bin/sh
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/common-include-vagrant.sh"
 
 # setup screenfetch for fun
 yum install -y git
@@ -52,6 +51,21 @@ nnoremap <leader><space> :nohlsearch<CR>
 " > ~/.vimrc
 
 echo "PS1='\[\033[36m\][\u@\h \W]\$ \[\033[0m\]'" >> ~/.bashrc
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- htop is better than top
+case "$centOSVersion" in
+  6*) EPEL_RPM=epel-release-6-8.noarch.rpm ;;
+  7*) EPEL_RPM=epel-release-7-11.noarch.rpm ;;
+  *)
+    echo "CentOS $centOSVersion is not recognized!"
+    exit 1
+esac
+
+wget dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/$EPEL_RPM
+rpm -ihv $EPEL_RPM
+yum install -y htop
+rm $EPEL_RPM
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=
 
 # neat little memory profiler
 echo "

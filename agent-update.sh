@@ -41,7 +41,7 @@ update_agent delete-target $AMBARI/ambari-server/src/main/resources/host_scripts
 update_agent delete-target $AMBARI/ambari-server/src/main/resources/stack-hooks /var/lib/ambari-agent/cache/stack-hooks
 update_agent preserve-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
 
-echo "    ├──${MAGENTA} Removing the following bad symlinks:"
+echo "    ├──${MAGENTA} Removing broken symlinks (if any):"
 find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec echo "      └── " {} \;
 find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec rm -rf {} \;
 echo "${NC}"
