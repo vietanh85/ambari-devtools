@@ -3,7 +3,7 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/bash-colors.sh"
 
-requiredVariables=( USERNAME AMBARI_GIT AMBARI_HOME AMBARI_BIN AMBARI_PYTHON_WRAPPER )
+requiredVariables=( USERNAME AMBARI_GIT AMBARI_HOME AMBARI_BIN AMBARI_PYTHON_WRAPPER VAGRANT_HOST_IP )
 for var in "${requiredVariables[@]}"
 do
   if [[ ! -n "${!var}" ]]; then

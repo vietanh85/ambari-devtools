@@ -6,9 +6,9 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 sudo ufw disable
 
 # hosts
-echo "192.168.64.1 $HOSTNAME" >> /etc/hosts
-echo "192.168.64.1 $HOSTNAME.local" >> /etc/hosts
-echo "192.168.64.1 $HOSTNAME.ix" >> /etc/hosts
+echo "$VAGRANT_HOST_IP $HOSTNAME" >> /etc/hosts
+echo "$VAGRANT_HOST_IP $HOSTNAME.local" >> /etc/hosts
+echo "$VAGRANT_HOST_IP $HOSTNAME.ix" >> /etc/hosts
 echo "192.168.64.111 oracle.ambari.apache.org oracle" >> /etc/hosts
 echo "192.168.64.112 mysql.ambari.apache.org mysql" >> /etc/hosts
 echo "192.168.64.113 repo.ambari.apache.org repository.ambari.apache.org repo repository"  >> /etc/hosts

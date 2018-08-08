@@ -25,7 +25,7 @@ while getopts ":s" opt; do
 done
 
 printf "${BLUE}-*- Updating agent.ini files to point to ${vagrantPrefix}01.ambari.apache.org${NC}\n\n"
-sed -i "s/hostname=192.168.64.1/hostname=${vagrantPrefix}01.ambari.apache.org/g" /etc/ambari-agent/conf/ambari-agent.ini
+sed -i "s/hostname=$VAGRANT_HOST_IP /hostname=${vagrantPrefix}01.ambari.apache.org/g" /etc/ambari-agent/conf/ambari-agent.ini
 ambari-agent restart
 
 ambariServerHost=$vagrantPrefix"01.ambari.apache.org"
