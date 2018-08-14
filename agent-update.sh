@@ -42,8 +42,10 @@ update_agent delete-target $AMBARI/ambari-server/src/main/resources/stack-hooks 
 update_agent preserve-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
 
 echo "    ├──${MAGENTA} Removing broken symlinks (if any):"
-find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec echo "      └── " {} \;
-find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec rm -rf {} \;
+if [ -d /var/lib/ambari-agent/cache/stacks/HDP ]; then
+  find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec echo "      └── " {} \;
+  find /var/lib/ambari-agent/cache/stacks/HDP -lname '*' -exec rm -rf {} \;
+fi
 echo "${NC}"
 
 # only copy HDP Mpack if the ambari version is low enough

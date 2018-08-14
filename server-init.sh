@@ -41,8 +41,18 @@ rm -f /private/ambari-server/resources/stacks/HDP/3.0
 case "$LINK_HDP_STACK" in
   [yY])
     echo "${CYAN}-*- Linking HDP Stack from Gerrit...${NC}"
-    ln -s /Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/3.0 /private/ambari-server/resources/stacks/HDP/3.0
-    cp -R /Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/2.6/upgrades /private/ambari-server/resources/stacks/HDP/2.6
+    HDP_DIR=/private/ambari-server/resources/stacks/HDP
+    if [[ ! -d "${HDP_DIR}" ]]; then
+      mkdir -p $HDP_DIR
+    fi
+
+    ln -s /Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/3.0 $HDP_DIR/3.0
+
+    # only copy HDP 2.6 upgrade packs if the 2.6 stack is checked out
+    GERRIT_HDP26_DIR=/Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/2.6
+    if [[ -d "${GERRIT_HDP26_DIR}" ]]; then
+      cp -R ${GERRIT_HDP26_DIR}/upgrades $HDP_DIR/2.6
+    fi
     ;;
   [nN])
     ;;
