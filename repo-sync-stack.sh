@@ -74,12 +74,33 @@ fi
 
 pushd $SYNC_LOCATION > /dev/null
 
-\rm -r $SYNC_LOCATION_WILDCARD || true
+printf "${YELLOW}Do you want to remove ${CYAN} $SYNC_LOCATION_WILDCARD ${YELLOW}? [Y/N] (N):${NC} "
+read -r REMOVE_WILDCARD_STACK
+if [[ -z "${REMOVE_WILDCARD_STACK// }" ]]; then
+  REMOVE_WILDCARD_STACK="N"
+fi
+
+case "$REMOVE_WILDCARD_STACK" in
+  [yY])
+    \rm -r $SYNC_LOCATION_WILDCARD || true
+    ;;
+  [nN])
+    ;;
+  *)
+    echo "$REMOVE_WILDCARD_STACK is not a valid selection"
+    exit 1
+esac
+
 reposync -r $STACK_NAME-$STACK_VERSION-$BUILD
 createrepo $STACK_NAME-$STACK_VERSION-$BUILD
 
 if $SUPPORTS_GPL ; then
-  \rm -r $SYNC_LOCATION/$STACK_NAME-GPL-$STACK_VERSION* || true
+  case "$REMOVE_WILDCARD_STACK" in
+    [yY])
+    \rm -r $SYNC_LOCATION/$STACK_NAME-GPL-$STACK_VERSION* || true
+      ;;
+  esac
+
   reposync -r $STACK_NAME-GPL-$STACK_VERSION-$BUILD
   createrepo $STACK_NAME-GPL-$STACK_VERSION-$BUILD
 fi

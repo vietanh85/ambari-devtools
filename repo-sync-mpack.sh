@@ -57,7 +57,23 @@ priority=1
 " > $MPACK_REPO_FILE
 
 pushd $MPACK_SYNC_LOCATION > /dev/null
-\rm -r $MPACK_SYNC_LOCATION_WILDCARD || true
+
+printf "${YELLOW}Do you want to remove ${CYAN} $MPACK_SYNC_LOCATION_WILDCARD ${YELLOW}? [Y/N] (N):${NC} "
+read -r REMOVE_WILDCARD_MPACK
+if [[ -z "${REMOVE_WILDCARD_MPACK// }" ]]; then
+  REMOVE_WILDCARD_MPACK="N"
+fi
+
+case "$REMOVE_WILDCARD_MPACK" in
+  [yY])
+    \rm -r $MPACK_SYNC_LOCATION_WILDCARD || true
+    ;;
+  [nN])
+    ;;
+  *)
+    echo "$REMOVE_WILDCARD_MPACK is not a valid selection"
+    exit 1
+esac
 
 reposync -r $MPACK_NAME-$MPACK_VERSION-$BUILD
 createrepo $MPACK_NAME-$MPACK_VERSION-$BUILD

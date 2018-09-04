@@ -39,7 +39,7 @@ update_agent delete-target $AMBARI/ambari-server/src/main/resources/common-servi
 update_agent delete-target $AMBARI/ambari-server/src/main/resources/custom_actions /var/lib/ambari-agent/cache/custom_actions
 update_agent delete-target $AMBARI/ambari-server/src/main/resources/host_scripts /var/lib/ambari-agent/cache/host_scripts
 update_agent delete-target $AMBARI/ambari-server/src/main/resources/stack-hooks /var/lib/ambari-agent/cache/stack-hooks
-update_agent preserve-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
+update_agent delete-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
 
 echo "    ├──${MAGENTA} Removing broken symlinks (if any):"
 if [ -d /var/lib/ambari-agent/cache/stacks/HDP ]; then
@@ -51,7 +51,7 @@ echo "${NC}"
 # only copy HDP Mpack if the ambari version is low enough
 if [[ $AMBARI_VERSION == 2* ]] ; then
   echo "-*- ${BLUE}Stacks (Mpacks)${NC}"
-  update_agent preserve-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
+  update_agent delete-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
   echo
 fi
 
@@ -90,10 +90,10 @@ if [ -d "/var/lib/ambari-server/resources" ]; then
   update_agent delete-target $AMBARI/ambari-server/src/main/resources/common-services /var/lib/ambari-server/resources/common-services
   update_agent delete-target $AMBARI/ambari-server/src/main/resources/custom_actions /var/lib/ambari-server/resources/custom_actions
   update_agent delete-target $AMBARI/ambari-server/src/main/resources/stack-hooks /var/lib/ambari-server/resources/stack-hooks
-  update_agent preserve-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
+  update_agent delete-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
 
   if [[ $AMBARI_VERSION == 2* ]] ; then
-    update_agent preserve-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
+    update_agent delete-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
   fi
 
   echo
