@@ -5,6 +5,8 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
 set -e
 
+HTTPD_ROOT="/repos"
+
 echo
 read -p "Mpack [HDPCORE]: " MPACK_NAME
 if [[ -z "${MPACK_NAME// }" ]]; then
@@ -32,7 +34,7 @@ MPACK_NAME_LOWERCASE="${MPACK_NAME,,}"
 # define variables to use
 MPACK_REPO_FILE="/etc/yum.repos.d/$MPACK_NAME_LOWERCASE.repo"
 MPACK_URL="http://s3.amazonaws.com/dev.hortonworks.com/$MPACK_NAME/centos7/1.x/BUILDS/$MPACK_VERSION-$BUILD"
-MPACK_SYNC_LOCATION="/var/www/html/$MPACK_NAME_LOWERCASE/centos7"
+MPACK_SYNC_LOCATION="$HTTPD_ROOT/$MPACK_NAME_LOWERCASE/centos7"
 MPACK_SYNC_LOCATION_WILDCARD="$MPACK_SYNC_LOCATION/$MPACK_NAME-$MPACK_VERSION*"
 MPACK_DEFINITION_NAME="$MPACK_NAME_LOWERCASE-$MPACK_VERSION-$BUILD-definition"
 MPACK_TARBALL_NAME="$MPACK_DEFINITION_NAME.tar.gz"
@@ -90,4 +92,6 @@ sed -i "s,http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7,
 
 tar -zcvf $MPACK_TARBALL_NAME $MPACK_DEFINITION_NAME
 \rm -r  $MPACK_DEFINITION_NAME
+
+rm $MPACK_REPO_FILE
 popd > /dev/null

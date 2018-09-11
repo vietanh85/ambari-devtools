@@ -5,6 +5,8 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
 set -e
 
+HTTPD_ROOT="/repos"
+
 echo
 
 read -p "Operating System [centos7]: " OS
@@ -35,15 +37,26 @@ if [[ -z "${REPO_URL_VERSION// }" ]]; then
   REPO_URL_VERSION="3.x"
 fi
 
-read -p "Supports GPL Repo [Y]: " SUPPORTS_GPL
-if [[ -z "${SUPPORTS_GPL// }" ]]; then
-  SUPPORTS_GPL=true
+read -p "Supports GPL Repo [Y]: " SUPPORTS_GPL_YN
+if [[ -z "${SUPPORTS_GPL_YN// }" ]]; then
+  SUPPORTS_GPL_YN="Y"
 fi
 
+case "$SUPPORTS_GPL_YN" in
+  [yY])
+    SUPPORTS_GPL=true
+    ;;
+  [nN])
+  SUPPORTS_GPL=false
+    ;;
+  *)
+  SUPPORTS_GPL=false
+esac
+
 # define variables to use
-REPO_FILE="/etc/yum.repos.d/$STACK_NAME_LOWERCASE.repo"
+REPO_FILE="/etc/yum.repos.d/$STACK_NAME_LOWERCASE-$STACK_VERSION.repo"
 REPO_URL="http://s3.amazonaws.com/dev.hortonworks.com/$STACK_NAME/$OS/$REPO_URL_VERSION/BUILDS/$STACK_VERSION-$BUILD"
-SYNC_LOCATION="/var/www/html/$STACK_NAME_LOWERCASE/$OS"
+SYNC_LOCATION="$HTTPD_ROOT/$STACK_NAME_LOWERCASE/$OS"
 SYNC_LOCATION_WILDCARD="$SYNC_LOCATION/$STACK_NAME-$STACK_VERSION*"
 
 echo "${CYAN}Syncing $STACK_NAME-$STACK_VERSION-$BUILD..."
@@ -63,13 +76,13 @@ priority=1
 " > $REPO_FILE
 
 if $SUPPORTS_GPL ; then
-echo "
+  echo "
 [$STACK_NAME-GPL-$STACK_VERSION-$BUILD]
 name=$STACK_NAME-GPL $STACK_VERSION-$BUILD
 baseurl=http://s3.amazonaws.com/dev.hortonworks.com/$STACK_NAME-GPL/$OS/$REPO_URL_VERSION/BUILDS/$STACK_VERSION-$BUILD
 gpgcheck=0
 enabled=1
-" >> $REPO_FILE
+  " >> $REPO_FILE
 fi
 
 pushd $SYNC_LOCATION > /dev/null
@@ -83,6 +96,9 @@ fi
 case "$REMOVE_WILDCARD_STACK" in
   [yY])
     \rm -r $SYNC_LOCATION_WILDCARD || true
+    if $SUPPORTS_GPL ; then
+      \rm -r $SYNC_LOCATION/$STACK_NAME-GPL-$STACK_VERSION* || true
+    fi
     ;;
   [nN])
     ;;
@@ -95,12 +111,6 @@ reposync -r $STACK_NAME-$STACK_VERSION-$BUILD
 createrepo $STACK_NAME-$STACK_VERSION-$BUILD
 
 if $SUPPORTS_GPL ; then
-  case "$REMOVE_WILDCARD_STACK" in
-    [yY])
-    \rm -r $SYNC_LOCATION/$STACK_NAME-GPL-$STACK_VERSION* || true
-      ;;
-  esac
-
   reposync -r $STACK_NAME-GPL-$STACK_VERSION-$BUILD
   createrepo $STACK_NAME-GPL-$STACK_VERSION-$BUILD
 fi

@@ -91,7 +91,7 @@ case "$AMBARI_INSTALL_CHOICE" in
   echo "2.7.0.0" >> $AMBARI_VERSION_MARKER
   ;;
   5)
-  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-3.0.0.0-1645/ambari.repo"
+  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-3.0.0.0/ambari.repo"
   echo "3.0.0.0" >> $AMBARI_VERSION_MARKER
   ;;
   *)
