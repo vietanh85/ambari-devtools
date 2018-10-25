@@ -61,7 +61,7 @@ echo ""
 echo "[1] Ambari 2.5.2.0"
 echo "[2] Ambari 2.6.0.0"
 echo "[3] Ambari 2.6.2.0 (CentOS 6/7)"
-echo "[4] Ambari 2.7.0.0 (CentOS 7)"
+echo "[4] Ambari 2.7.3.0 (CentOS 7)"
 echo "[5] Ambari 3.0.0.0 (CentOS 7)"
 printf "Option (5): "
 
@@ -87,8 +87,8 @@ case "$AMBARI_INSTALL_CHOICE" in
   echo "2.6.2.0" >> $AMBARI_VERSION_MARKER
   ;;
   4)
-  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-2.7.0.0/ambari.repo"
-  echo "2.7.0.0" >> $AMBARI_VERSION_MARKER
+  wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-2.7.3.0/ambari.repo"
+  echo "2.7.3.0" >> $AMBARI_VERSION_MARKER
   ;;
   5)
   wget -O /etc/yum.repos.d/ambari.repo "http://repo.ambari.apache.org/ambari/$operatingSystem/Ambari-3.0.0.0/ambari.repo"

@@ -50,7 +50,7 @@ case "$LINK_HDP_STACK" in
 
     # only copy HDP 2.6 upgrade packs if the 2.6 stack is checked out
     GERRIT_HDP26_DIR=/Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/2.6
-    if [[ -d "${GERRIT_HDP26_DIR}" ]]; then
+    if [[ -d "${GERRIT_HDP26_DIR}" ] && [ -d "${HDP_DIR}/2.6" ]]; then
       cp -R ${GERRIT_HDP26_DIR}/upgrades $HDP_DIR/2.6
     fi
     ;;
