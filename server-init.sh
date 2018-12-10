@@ -37,27 +37,60 @@ if [[ -z "${LINK_HDP_STACK// }" ]]; then
   LINK_HDP_STACK="N"
 fi
 
-rm -f /private/ambari-server/resources/stacks/HDP/3.0
+# remove the stacks symlink or directory
+PRIVATE_RESOURCES_STACKS=/private/ambari-server/resources/stacks
+PRIVATE_RESOURCES_STACKS_HDP=${PRIVATE_RESOURCES_STACKS}/HDP
+if [[ -d "${PRIVATE_RESOURCES_STACKS}" ]]; then
+  echo "${CYAN}-*- Removing the ${RED}directory${CYAN} ${PRIVATE_RESOURCES_STACKS} ${NC}"
+  rm -rf ${PRIVATE_RESOURCES_STACKS}
+elif [[ condition ]]; then
+  echo "${CYAN}-*- Removing the ${RED}symlink${CYAN} ${PRIVATE_RESOURCES_STACKS} ${NC}"
+  rm -f ${PRIVATE_RESOURCES_STACKS}
+fi
+
 case "$LINK_HDP_STACK" in
   [yY])
     echo "${CYAN}-*- Linking HDP Stack from Gerrit...${NC}"
-    HDP_DIR=/private/ambari-server/resources/stacks/HDP
-    if [[ ! -d "${HDP_DIR}" ]]; then
-      mkdir -p $HDP_DIR
+
+    HDP_VERSIONS=(2.4 2.5 2.6 2.7 2.8 3.0 3.1)
+
+    # make the stacks directory
+    mkdir -p ${PRIVATE_RESOURCES_STACKS_HDP}
+
+    # find any HDP versions in Ambari's source tree (normally for older versions)
+    AMBARI_HDP_DIRECTORY=$AMBARI_GIT/ambari-server/src/main/resources/stacks/HDP
+    if [[ -d "${AMBARI_HDP_DIRECTORY}" ]]; then
+      for HDP_VERSION in "${HDP_VERSIONS[@]}"
+      do
+        if [[ -d "${AMBARI_HDP_DIRECTORY}/${HDP_VERSION}" ]]; then
+          ln -s ${AMBARI_HDP_DIRECTORY}/${HDP_VERSION} ${PRIVATE_RESOURCES_STACKS_HDP}/${HDP_VERSION}
+        fi
+      done
     fi
 
-    ln -s /Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/3.0 $HDP_DIR/3.0
+    # some repositories have a different structure for the HDP stacks, so see which is checked out
+    GERRIT_HDP_BASE_DIRS=(/Users/$USERNAME/src/hwx/hdp_ambari_definitions /Users/$USERNAME/src/hwx/hdp_ambari_definitions/stack)
+    for BASE_DIR in "${GERRIT_HDP_BASE_DIRS[@]}"
+    do
+      if [[ -d "${BASE_DIR}/src/main/resources/stacks/HDP" ]]; then
+        GERRIT_HDP_BASE_DIR=${BASE_DIR}/src/main/resources/stacks/HDP
+        break
+      fi
+    done
 
-    # only copy HDP 2.6 upgrade packs if the 2.6 stack is checked out
-    GERRIT_HDP26_DIR=/Users/$USERNAME/src/hwx/hdp_ambari_definitions/src/main/resources/stacks/HDP/2.6
-    if [[ -d "${GERRIT_HDP26_DIR}" && -d "${HDP_DIR}/2.6" ]]; then
-      cp -R ${GERRIT_HDP26_DIR}/upgrades $HDP_DIR/2.6
-    fi
+    for HDP_VERSION in "${HDP_VERSIONS[@]}"
+    do
+      if [[ -d "${GERRIT_HDP_BASE_DIR}/${HDP_VERSION}" ]]; then
+        ln -s ${GERRIT_HDP_BASE_DIR}/${HDP_VERSION} ${PRIVATE_RESOURCES_STACKS_HDP}/${HDP_VERSION}
+      fi
+    done
     ;;
   [nN])
+    echo "${CYAN}-*- Linking HDP Stack from Ambari source...${NC}"
+    ln -s $AMBARI_GIT/ambari-server/src/main/resources/stacks ${PRIVATE_RESOURCES_STACKS}
     ;;
   *)
-    echo "$LINK_HDP_STACK is not a valid selection"
+    echo "${RED}$LINK_HDP_STACK is not a valid selection ${NC}"
     exit 1
 esac
 

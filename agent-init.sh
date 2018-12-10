@@ -10,12 +10,12 @@ echo "${MAGENTA}=-=-=-=-=-=-= Agent Initialization =-=-=-=-=-=-="
 echo "[-s]: stock installation (no updates from local source)"
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=${NC}"
 
-stockInstall=false
+STOCK_INSTALL=false
 while getopts ":s" opt; do
   case ${opt} in
     s)
       echo "${BLUE}Installating a stock version of Ambari!${NC}"
-      stockInstall=true
+      STOCK_INSTALL=true
       ;;
     \?)
       echo "${RED}Usage: agent-init [-s]"
@@ -117,7 +117,7 @@ echo "alias tail-agent='tail -100f /var/log/ambari-agent/ambari-agent.log'" >> ~
 echo "alias tail-server='tail -100f /var/log/ambari-server/ambari-server.log'" >> ~/.bashrc
 echo "AMBARI=/osx/src/apache/ambari" >> ~/.bashrc
 
-if [ "$stockInstall" = true ] ; then
+if [ "$STOCK_INSTALL" = true ] ; then
   exit 0
 fi
 

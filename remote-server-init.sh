@@ -9,12 +9,12 @@ echo "  [-s]: stock installation (no updates from local source)"
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "${NC}"
 
-stockInstall=false
+STOCK_INSTALL=false
 while getopts ":s" opt; do
   case ${opt} in
     s)
       echo "${BLUE}Installating a stock version of Ambari!${NC}"
-      stockInstall=true
+      STOCK_INSTALL=true
       ;;
     \? )
       echo "${RED}Usage: remote-server-init [-s]"
@@ -25,7 +25,7 @@ while getopts ":s" opt; do
 done
 
 printf "${BLUE}-*- Updating agent.ini files to point to ${vagrantPrefix}01.ambari.apache.org${NC}\n\n"
-sed -i "s/hostname=$VAGRANT_HOST_IP /hostname=${vagrantPrefix}01.ambari.apache.org/g" /etc/ambari-agent/conf/ambari-agent.ini
+sed -i "s/hostname=$VAGRANT_HOST_IP/hostname=${vagrantPrefix}01.ambari.apache.org/g" /etc/ambari-agent/conf/ambari-agent.ini
 ambari-agent restart
 
 ambariServerHost=$vagrantPrefix"01.ambari.apache.org"
@@ -38,7 +38,7 @@ fi
 yum install -y ambari-server
 
 # if not a stock install
-if [ "$stockInstall" = false ] ; then
+if [ "$STOCK_INSTALL" = false ] ; then
   # use the developer version
   echo '${ambariVersion}' > /var/lib/ambari-server/resources/version
 
@@ -62,7 +62,7 @@ sed -i 's/$AMBARI_JVM_ARGS/$AMBARI_JVM_ARGS -agentlib:jdwp=transport=dt_socket,s
 # older versions
 # EDIT /usr/lib/$pythonDirectory/site-packages/ambari_server/serverClassPath.py
 #  ambari_class_path = "/osx/src/apache/ambari/ambari-server/target/classes" + os.pathsep + "/osx/src/apache/ambari/ambari-server/target" + os.pathsep + ambari_class_path
-if [ "$stockInstall" = false ] ; then
+if [ "$STOCK_INSTALL" = false ] ; then
   printf "${BLUE}-*- Updating Ambari version in the database${NC}\n"
 
   export PGPASSWORD=bigdata
@@ -76,6 +76,10 @@ if [ "$stockInstall" = false ] ; then
 
   printf "${BLUE}-*- Copying software registry${NC}\n"
   cp /private/ambari-server/resources/hwx-software-registry.json /var/lib/ambari-server/resources/
+fi
+
+if [ "$STOCK_INSTALL" = true ] ; then
+  cp /private/ambari-server/resources/mysql-connector-java.jar /var/lib/ambari-server/resources
 fi
 
 ambari-server start

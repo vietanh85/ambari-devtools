@@ -17,7 +17,7 @@ esac
 
 ambari-agent stop
 
-# Ambari 3.0+ does not use site-packages
+# Ambari 2.8+ does not use site-packages
 echo "-*- ${BLUE}Agent Python${NC}"
 if [ -d "/usr/lib/$pythonDirectory/site-packages/ambari_agent" ]; then
   update_agent delete-target $AMBARI/ambari-agent/src/main/python/ambari_agent /usr/lib/$pythonDirectory/site-packages/ambari_agent
@@ -26,6 +26,8 @@ fi
 # /usr/lib/ambari-agent/lib
 update_agent delete-target $AMBARI/ambari-agent/src/main/python/ambari_agent /usr/lib/ambari-agent/lib/ambari_agent
 update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_commons /usr/lib/ambari-agent/lib/ambari_commons
+update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_pbkdf2 /usr/lib/ambari-agent/lib/ambari_pbkdf2
+update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_pyaes /usr/lib/ambari-agent/lib/ambari_pyaes
 update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_stomp /usr/lib/ambari-agent/lib/ambari_stomp
 update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_ws4py /usr/lib/ambari-agent/lib/ambari_ws4py
 update_agent delete-target $AMBARI/ambari-common/src/main/python/ambari_jinja2/ambari_jinja2 /usr/lib/ambari-agent/lib/ambari_jinja2
@@ -48,10 +50,21 @@ if [ -d /var/lib/ambari-agent/cache/stacks/HDP ]; then
 fi
 echo "${NC}"
 
+# figure out where we need to be copying stacks from
+GERRIT_HDP_CANDIDATE_DIRS=($HDP_MPACK/src/main/resources/stacks $HDP_MPACK/stack/src/main/resources/stacks)
+for GERRIT_HDP30_CANDIDATE_DIR in "${GERRIT_HDP_CANDIDATE_DIRS[@]}"
+do
+  if [[ -d "${GERRIT_HDP30_CANDIDATE_DIR}" ]]; then
+    GERRIT_HDP30_DIR=${GERRIT_HDP30_CANDIDATE_DIR}
+    break
+  fi
+done
+
+
 # only copy HDP Mpack if the ambari version is low enough
 if [[ $AMBARI_VERSION == 2* ]] ; then
   echo "-*- ${BLUE}Stacks (Mpacks)${NC}"
-  update_agent delete-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-agent/cache/stacks
+  update_agent delete-target $GERRIT_HDP30_DIR /var/lib/ambari-agent/cache/stacks
   echo
 fi
 
@@ -93,7 +106,7 @@ if [ -d "/var/lib/ambari-server/resources" ]; then
   update_agent delete-target $AMBARI/ambari-server/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
 
   if [[ $AMBARI_VERSION == 2* ]] ; then
-    update_agent delete-target $HDP_MPACK/src/main/resources/stacks /var/lib/ambari-server/resources/stacks
+    update_agent delete-target $GERRIT_HDP30_DIR /var/lib/ambari-server/resources/stacks
   fi
 
   echo
