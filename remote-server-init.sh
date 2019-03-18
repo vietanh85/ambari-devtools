@@ -68,8 +68,8 @@ if [ "$STOCK_INSTALL" = false ] ; then
   export PGPASSWORD=bigdata
   psql -U ambari -d ambari -c "UPDATE metainfo SET metainfo_value = '\${ambariVersion}' WHERE metainfo_key = 'version'"
 
-  echo "export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes" >> ~/$profileFile
-  export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes
+  echo "export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes:/osx/src/apache/ambari/ambari-server-spi/target/classes" >> ~/$profileFile
+  export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes:/osx/src/apache/ambari/ambari-server-spi/target/classes
 
   printf "${BLUE}-*- Removing Views for faster startup${NC}\n"
   find /var/lib/ambari-server/resources/views ! -name 'ambari-admin*' -type f -exec rm -f {} +

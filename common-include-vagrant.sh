@@ -5,7 +5,7 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
 AMBARI=/osx/src/apache/ambari
 AMBARI_VERSION_MARKER=~/ambari-version
-HDP_MPACK=/osx/src/hwx/hdp_ambari_definitions
+HDP_MPACK=/osx/src/gerrit.eng.hortonworks.com/hdp_ambari_definitions
 HOSTNAME=`hostname`
 
 centOSVersion=`cat /etc/redhat-release | grep -o '[0-9]\.[0-9]'`
