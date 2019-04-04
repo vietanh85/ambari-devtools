@@ -10,7 +10,7 @@ if [ "$HOSTNAME" != $ambariServerHost ]; then
 fi
 
 # picked up on startup
-export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes
+export SERVER_CLASSPATH=/osx/src/github.com/apache/ambari/ambari-server/target/classes
 
 # exit on any failure condition
 set -e
