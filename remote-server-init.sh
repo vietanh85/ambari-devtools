@@ -61,15 +61,15 @@ sed -i 's/$AMBARI_JVM_ARGS/$AMBARI_JVM_ARGS -agentlib:jdwp=transport=dt_socket,s
 # picked up on startup
 # older versions
 # EDIT /usr/lib/$pythonDirectory/site-packages/ambari_server/serverClassPath.py
-#  ambari_class_path = "/osx/src/apache/ambari/ambari-server/target/classes" + os.pathsep + "/osx/src/apache/ambari/ambari-server/target" + os.pathsep + ambari_class_path
+#  ambari_class_path = "/osx/src/github.com/apache/ambari/ambari-server/target/classes" + os.pathsep + "/osx/src/github.com/apache/ambari/ambari-server/target" + os.pathsep + ambari_class_path
 if [ "$STOCK_INSTALL" = false ] ; then
   printf "${BLUE}-*- Updating Ambari version in the database${NC}\n"
 
   export PGPASSWORD=bigdata
   psql -U ambari -d ambari -c "UPDATE metainfo SET metainfo_value = '\${ambariVersion}' WHERE metainfo_key = 'version'"
 
-  echo "export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes" >> ~/$profileFile
-  export SERVER_CLASSPATH=/osx/src/apache/ambari/ambari-server/target/classes
+  echo "export SERVER_CLASSPATH=/osx/src/github.com/apache/ambari/ambari-server/target/classes:/osx/src/github.com/apache/ambari/ambari-server-spi/target/classes" >> ~/$profileFile
+  export SERVER_CLASSPATH=/osx/src/github.com/apache/ambari/ambari-server/target/classes:/osx/src/github.com/apache/ambari/ambari-server-spi/target/classes
 
   printf "${BLUE}-*- Removing Views for faster startup${NC}\n"
   find /var/lib/ambari-server/resources/views ! -name 'ambari-admin*' -type f -exec rm -f {} +

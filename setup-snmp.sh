@@ -10,7 +10,7 @@ set -e
 
 yum install net-snmp net-snmp-utils net-snmp-libs -y
 
-cp  /osx/src/apache/ambari/ambari-server/src/main/resources/APACHE-AMBARI-MIB.txt /usr/share/snmp/mibs
+cp  /osx/src/github.com/apache/ambari/ambari-server/src/main/resources/APACHE-AMBARI-MIB.txt /usr/share/snmp/mibs
 
 echo "disableAuthorization yes" >> /etc/snmp/snmptrapd.conf
 

@@ -115,7 +115,7 @@ echo "alias server-update='/osx/ambari-scripts/remote-server-update.sh'" >> ~/.b
 echo "alias web-update='/osx/ambari-scripts/remote-web-update.sh'" >> ~/.bashrc
 echo "alias tail-agent='tail -100f /var/log/ambari-agent/ambari-agent.log'" >> ~/.bashrc
 echo "alias tail-server='tail -100f /var/log/ambari-server/ambari-server.log'" >> ~/.bashrc
-echo "AMBARI=/osx/src/apache/ambari" >> ~/.bashrc
+echo "AMBARI=/osx/src/github.com/apache/ambari" >> ~/.bashrc
 
 if [ "$STOCK_INSTALL" = true ] ; then
   exit 0

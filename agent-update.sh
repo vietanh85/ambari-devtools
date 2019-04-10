@@ -64,7 +64,7 @@ done
 # only copy HDP Mpack if the ambari version is low enough
 if [[ $AMBARI_VERSION == 2* ]] ; then
   echo "-*- ${BLUE}Stacks (Mpacks)${NC}"
-  update_agent delete-target $GERRIT_HDP30_DIR /var/lib/ambari-agent/cache/stacks
+  update_agent preserve-target $GERRIT_HDP30_DIR /var/lib/ambari-agent/cache/stacks
   echo
 fi
 
